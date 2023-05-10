@@ -1,0 +1,93 @@
+CREATION VM
+
+az vm create \
+  --resource-group lyllaresgrp \
+  --name vmlylla \
+  --image UbuntuLTS \
+  --admin-username lylla \
+  --generate-ssh-keys \
+  --public-ip-sku Standard
+  
+  OUVERTURE DU PORT 80
+  az vm open-port --port 80 --resource-group lyllaresgrp --name vmlylla
+  
+  CONNECTION SSH
+  
+  ssh lylla@23.97.223.39
+  ADRESSE IP :23.97.223.39
+
+  
+  INSTALLATION APACHE
+  sudo apt update
+  sudo apt install apache2
+  sudo ufw app list
+  sudo ufw allow 'Apache'
+  sudo systemctl status apache2
+  apache2 -v
+  
+  INSTALLATION MYSQL
+  
+  sudo apt install mysql-server
+  sudo mysql
+  SELECT user,authentication_string,plugin,host FROM mysql.user;
+  ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'password';
+  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+  FLUSH PRIVILEGES;
+  SELECT user,authentication_string,plugin,host FROM mysql.user;
+  exit
+  sudo mysql
+  mysql -u root -p
+  mysql> CREATE USER 'lylla'@'localhost' IDENTIFIED BY 'Jevis@ambronay
+  mysql> GRANT ALL PRIVILEGES ON *.* TO 'lylla'@'localhost' WITH GRANT OPTION;
+  exit
+  
+  mysql -V
+  
+  installation php my admin
+  
+  sudo apt install phpmyadmin
+  sudo apt install php libapache2-mod-php php-mysql
+  sudo mkdir /var/www/your_domain
+  sudo chown -R $USER:lylla /var/www/your_domain
+  sudo vim /etc/apache2/sites-available/your_domain.conf
+  
+  <VirtualHost *:80>
+    ServerName your_domain
+    ServerAlias www.your_domain
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/your_domain
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+sudo a2ensite your_domain
+sudo a2dissite 000-default
+sudo apache2ctl configtest
+sudo systemctl reload apache2
+vim /var/www/your_domain/index.html
+<h1>It works!</h1>
+
+<p>This is the landing page of <strong>your_domain</strong>.</p>
+
+Now open your browser and access the domain name or IP address of your server on port 8000 :
+http://server_domain_or_IP
+
+sudo vim /etc/apache2/mods-enabled/dir.conf
+
+ <IfModule mod_dir.c>
+        DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
+</IfModule>
+
+sudo systemctl reload apache2
+
+vim /var/www/your_domain/info.php
+
+<?php
+phpinfo();
+
+
+Après avoir vérifié les informations pertinentes sur votre serveur PHP par le biais de cette page,
+il est préférable de supprimer le fichier que vous avez créé, car il contient des informations 
+sensibles sur votre environnement PHP (et sur votre serveur Ubuntu).
+Pour ce faire, vous pouvez utiliser rm :
+sudo rm /var/www/your_domain/info.php
