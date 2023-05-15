@@ -30,18 +30,11 @@ az vm create \
   
   sudo apt install mysql-server
   sudo mysql
-  SELECT user,authentication_string,plugin,host FROM mysql.user;
-  ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'password';
-  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-  FLUSH PRIVILEGES;
-  SELECT user,authentication_string,plugin,host FROM mysql.user;
-  exit
-  sudo mysql
   mysql -u root -p
   mysql> CREATE USER 'lylla'@'localhost' IDENTIFIED BY 'Jevis@ambronay
   mysql> GRANT ALL PRIVILEGES ON *.* TO 'lylla'@'localhost' WITH GRANT OPTION;
   exit
-  
+   
   mysql -V
   
   installation php my admin
@@ -59,7 +52,7 @@ az vm create \
     DocumentRoot /var/www/your_domain
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
+  </VirtualHost>
 
 sudo a2ensite your_domain
 sudo a2dissite 000-default
@@ -92,3 +85,37 @@ il est préférable de supprimer le fichier que vous avez créé, car il contien
 sensibles sur votre environnement PHP (et sur votre serveur Ubuntu).
 Pour ce faire, vous pouvez utiliser rm :
 sudo rm /var/www/your_domain/info.php
+
+INSTALLATION WORDPRESS
+
+sudo apt install wordpress
+creer un fichier wordpress.sql POUR CONFIGURER LA BASE DE DONN2E mysql pour wordpress :
+
+touch wordpress.sql
+
+sudo apt install wordpress
+sudo vim wordpress.sql :
+
+CREATE DATABASE wordpress;
+GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER
+ON wordpress.*
+TO wordpress@localhost
+IDENTIFIED BY'Jevis@ambronay';
+
+executez commande suivantes pour creer la base de donner :
+
+$cat wordpress.sql | sudo mysql --defaults-extra-file=/etc/mysql/debian.cnf
+
+Vous n'avez plus besoin de fichier de configuration:
+
+sudo rm wordpress.sql
+sudo vim /ect/wordpress/config-localhost.php
+<?php
+define('DB_NAME','wordpress');
+define('DB_USER','wordpress');
+define('DB_PASSWORD','Jevis@ambronay');
+define('DB_HOST','localhost');
+define('WP_CONTENT_DIR','/usr/share/wordpress/wp-content');
+?>
+
+sudo vim usr/share/wordpress/wp-content
