@@ -1,7 +1,5 @@
 CREATION VM
 
-az group create --name lyllaresgrp  --location westeurope
-
 az vm create \
   --resource-group lyllaresgrp \
   --name vmlylla \
@@ -21,6 +19,7 @@ az vm create \
   
   INSTALLATION APACHE
   sudo apt update
+  sudo apt upgrade	
   sudo apt install apache2
   sudo ufw app list
   sudo ufw allow 'Apache'
