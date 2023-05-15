@@ -1,5 +1,7 @@
 CREATION VM
 
+az group create --name vmlylla --location westeurope
+
 az vm create \
   --resource-group lyllaresgrp \
   --name vmlylla \
